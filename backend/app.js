@@ -11,6 +11,9 @@ const { errors } = require('celebrate'); // мидлвэр ошибки
 // безопасность
 const helmet = require('helmet');
 
+// логеры
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
 const limiter = require('./middlewares/limiter');
 
 const signinRouter = require('./routes/signin');
@@ -36,6 +39,8 @@ mongoose.connect(DB_URL, {
 app.use(helmet()); // для автоматической проставки заголовков безопасности
 app.use(limiter); // для предотвращения ddos атак, ограничитель запросов
 
+app.use(requestLogger); // подключаем логгер запросов
+
 // роуты
 app.use('/', signinRouter);
 app.use('/', signupRouter);
@@ -46,6 +51,8 @@ app.use('/cards', auth, cardRouter);
 app.use('*', auth, (req, res, next) => {
   next(new NotFoundError('Запрашиваемый URL не существует'));
 });
+
+app.use(errorLogger); // подключаем логгер ошибок
 
 app.use(errors()); // обработка ошибок celebrate
 /* будет обрабатывать только ошибки, которые сгенерировал celebrate.
