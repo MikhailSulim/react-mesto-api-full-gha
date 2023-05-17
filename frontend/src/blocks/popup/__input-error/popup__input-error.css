@@ -1,0 +1,22 @@
+.popup__input-error {
+  display: block;
+  font-family: "Inter", Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.52px;
+  color: #f00;
+  min-height: calc(14.52px * 2);
+  margin: 5px 0 0 0;
+  box-sizing: border-box;
+}
+
+.popup__input-error:last-of-type {
+  margin: 5px 0 18px 0;
+}
+
+@media screen and (max-width: 570px) {
+  .popup__input-error:last-of-type {
+    margin: 5px 0 14px 0;
+  }
+}
