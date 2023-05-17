@@ -3,7 +3,14 @@ import PopupWithForm from "./PopupWithForm";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import useFormValidate from "./../hooks/useFormValidate";
 
-function EditProfilePopup({ isOpen, onClose, onUpdateUser, isLoading }) {
+function EditProfilePopup({
+  isOpen,
+  onClose,
+  onUpdateUser,
+  isLoading,
+  onCloseEsc,
+  onCloseOverlay,
+}) {
   const { values, errors, onChange, resetValidation, isFormValid } =
     useFormValidate();
 
@@ -39,6 +46,8 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, isLoading }) {
       buttonText={isLoading ? "Сохранение..." : "Сохранить"}
       onSubmit={handleSubmit}
       isFormValid={isFormValid}
+      onCloseEsc={onCloseEsc}
+      onCloseOverlay={onCloseOverlay}
     >
       <input
         id="input-name"

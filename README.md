@@ -14,7 +14,7 @@
 
 Frontend https://mesto2023.mikhailsulim.nomoredomains.monster
 
-Backend https://api.mesto2023.mikhailsulim.nomoredomains.monster
+Backend https://api.mesto2023.mihailsulim.nomoredomains.monster
 
 ## Ссылка на чеклист для самопроверки
 [Чеклист работы 15 спринта](https://code.s3.yandex.net/web-developer/checklists-pdf/new-program/checklist_15.pdf)

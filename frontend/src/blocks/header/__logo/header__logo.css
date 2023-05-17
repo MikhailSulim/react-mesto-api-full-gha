@@ -5,6 +5,7 @@
   width: 142px;
   height: 33px;
   margin-bottom: 41px;
+  grid-area: logo;
 }
 
 @media screen and (max-width: 880px) {

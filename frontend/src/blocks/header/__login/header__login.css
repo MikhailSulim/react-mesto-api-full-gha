@@ -1,0 +1,24 @@
+.header__login {
+  font-family: "Inter", Arial, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  color: #fff;
+  margin: 0 24px 0 0;
+}
+
+/* @media screen and (max-width: 570px) {
+  .header__login {
+    font-size: 14px;
+    line-height: 17px;
+    margin: 0;
+  }
+} */
+
+@media screen and (max-width: 570px) {
+  .header__login {
+    margin: 0;
+    padding-top: 12px;
+  }
+}

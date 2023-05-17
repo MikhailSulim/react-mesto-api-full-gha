@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 function PopupWithForm({
   isOpen,
   onClose,
@@ -7,7 +9,21 @@ function PopupWithForm({
   buttonText,
   onSubmit,
   isFormValid,
+  onCloseEsc,
+  onCloseOverlay,
 }) {
+  useEffect(() => {
+    isOpen
+      ? document.addEventListener("keydown", onCloseEsc)
+      : document.removeEventListener("keydown", onCloseEsc);
+  }, [isOpen]);
+
+  useEffect(() => {
+    isOpen
+      ? document.addEventListener("mousedown", onCloseOverlay)
+      : document.removeEventListener("mousedown", onCloseOverlay);
+  }, [isOpen]);
+
   return (
     <div
       className={`popup popup_type_${name} ${isOpen ? "popup_is-opened" : ""}`}

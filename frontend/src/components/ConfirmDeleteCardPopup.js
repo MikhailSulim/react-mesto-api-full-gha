@@ -6,6 +6,8 @@ function ConfirmDeleteCardPopup({
   onCardDelete,
   cardId,
   isLoading,
+  onCloseEsc,
+  onCloseOverlay,
 }) {
   function handleSubmit(e) {
     e.preventDefault();
@@ -21,6 +23,8 @@ function ConfirmDeleteCardPopup({
       onSubmit={handleSubmit}
       buttonText={isLoading ? "Удаление..." : "Да"}
       isFormValid={true}
+      onCloseEsc={onCloseEsc}
+      onCloseOverlay={onCloseOverlay}
     />
   );
 }

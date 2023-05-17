@@ -1,44 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./Header";
+import Register from "./Register";
+import Login from "./Login";
 import Main from "./Main";
 import Footer from "./Footer";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import InfoTooltip from "./InfoTooltip";
 import ConfirmDeleteCardPopup from "./ConfirmDeleteCardPopup";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/Api.js";
+import { register, authorize, getTokenData } from "../utils/ApiAuth";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import ProtectedRouteElement from "./ProtectedRoute";
 
 function App() {
+  const ERR_MESSAGE = "Что-то пошло не так! Попробуйте ещё раз.";
   // переменные состояния, отвечающие за видимость попапов
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
-    React.useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
-    React.useState(false);
-
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isConfirmDeleteCardPopupOpen, setIsConfirmDeleteCardPopupOpen] =
-    React.useState(false);
+    useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [textMessageInfoTooltip, setTextMessageInfoTooltip] = useState("");
 
-  const [selectedCard, setSelectedCard] = React.useState({});
-  const [deletedCard, setDeletedCard] = React.useState({});
-  const [cards, setCards] = React.useState([]);
+  // переменные состояния, отвечающие за карточки
+  const [selectedCard, setSelectedCard] = useState({});
+  const [deletedCard, setDeletedCard] = useState({});
+  const [cards, setCards] = useState([]);
 
-  const [currentUser, setCurrentUser] = React.useState({});
+  // переменные состояния, отвечающие за данные текущего пользователя
+  const [currentUser, setCurrentUser] = useState({});
 
-  const [isLoading, setIsLoading] = React.useState(false);
+  // переменные состояния, твечающие за лоадеры
+  const [isLoading, setIsLoading] = useState(false);
 
-  React.useEffect(() => {
-    api
-      .getAllData()
-      .then((res) => {
-        const [initialCards, userData] = res;
-        setCurrentUser(userData);
-        setCards(initialCards);
-      })
-      .catch((error) => console.error("error", error));
-  }, []);
+  // // переменные состояния, отвечающие за авторизацию
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userLogin, setUserLogin] = useState(null);
+  const [isValidAuth, setIsValidAuth] = useState(false);
+
+  const [isShowMenu, setIsShowMenu] = useState(false);
+
+  const navigate = useNavigate();
 
   // функции открытия/закрытия попапов
   function handleEditAvatarClick() {
@@ -61,6 +68,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setSelectedCard({});
     setIsConfirmDeleteCardPopupOpen(false);
+    setIsInfoTooltipOpen(false);
   }
 
   function handleCardClick(card) {
@@ -155,28 +163,172 @@ function App() {
       });
   }
 
+  // функции для аутентификации на сайте
+
+  function cbLogin({ email, password }) {
+    // функция авторизации
+    authorize(email, password)
+      .then((res) => {
+        localStorage.setItem("jwt", res.token);
+        setIsLoggedIn(true);
+        setUserLogin(email);
+        navigate("/", { replace: true });
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsValidAuth(false);
+        setTextMessageInfoTooltip(ERR_MESSAGE);
+        setIsInfoTooltipOpen(!isInfoTooltipOpen);
+      });
+  }
+
+  function cbRegister({ email, password }) {
+    register(email, password)
+      .then((res) => {
+        setIsValidAuth(true);
+        setTextMessageInfoTooltip("Вы успешно зарегистрировались!");
+        setIsInfoTooltipOpen(!isInfoTooltipOpen);
+        navigate("/signin", { replace: true });
+      })
+      .catch(() => {
+        setIsValidAuth(false);
+        setTextMessageInfoTooltip(ERR_MESSAGE);
+        setIsInfoTooltipOpen(!isInfoTooltipOpen);
+      });
+  }
+
+  function cbLogOut() {
+    setIsLoggedIn(false);
+    setUserLogin(null);
+    localStorage.removeItem("jwt");
+  }
+
+  React.useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    getTokenData(jwt)
+      .then((res) => {
+        setUserLogin(res.data.email);
+        setIsLoggedIn(true);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
+  React.useEffect(() => {
+    if (isLoggedIn) {
+      api
+        .getAllData()
+        .then((res) => {
+          const [initialCards, userData] = res;
+          setCurrentUser(userData);
+          setCards(initialCards);
+        })
+        .catch((error) => console.error("error", error));
+    }
+  }, [isLoggedIn]);
+
+  function closePopupByEsc(event) {
+    if (event.key === "Escape") {
+      closeAllPopups();
+    }
+  }
+
+  function closePopupByClickOverlay(event) {
+    if (event.target.classList.contains("popup_is-opened")) {
+      closeAllPopups();
+    }
+  }
+
+  function handleShowMenu() {
+    // функция для раскрытия/закрытия меню в мобильной версии
+    setIsShowMenu(!isShowMenu);
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
-
-        <Main
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          cards={cards}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDeleteClick}
-        />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Header
+                  loginText={userLogin}
+                  signText="Выйти"
+                  onClick={cbLogOut}
+                  route=""
+                  onShowMenu={handleShowMenu}
+                  isShowMenu={isShowMenu}
+                />
+                <ProtectedRouteElement
+                  component={Main}
+                  isLoggedIn={isLoggedIn}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  cards={cards}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDeleteClick}
+                />
+              </>
+            }
+          />
+          <Route
+            path="/signin"
+            element={
+              <>
+                <Header
+                  loginText=""
+                  signText="Регистрация"
+                  route="/signup"
+                  onShowMenu={handleShowMenu}
+                  isShowMenu={isShowMenu}
+                />
+                <Login isLoggedIn={isLoggedIn} onLogin={cbLogin} />
+              </>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <>
+                <Header
+                  loginText=""
+                  signText="Войти"
+                  route="/signin"
+                  onShowMenu={handleShowMenu}
+                  isShowMenu={isShowMenu}
+                />
+                <Register isLoggedIn={isLoggedIn} onRegister={cbRegister} />
+              </>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              isLoggedIn ? <Navigate to="/" /> : <Navigate to="/signin" />
+            }
+          />
+        </Routes>
 
         <Footer />
+
+        <InfoTooltip
+          isOpen={isInfoTooltipOpen}
+          onClose={closeAllPopups}
+          isValidAuth={isValidAuth}
+          textMessage={textMessageInfoTooltip}
+        />
 
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
           isLoading={isLoading}
+          onCloseEsc={closePopupByEsc}
+          onCloseOverlay={closePopupByClickOverlay}
         />
 
         <EditAvatarPopup
@@ -184,6 +336,8 @@ function App() {
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
           isLoading={isLoading}
+          onCloseEsc={closePopupByEsc}
+          onCloseOverlay={closePopupByClickOverlay}
         />
 
         <AddPlacePopup
@@ -191,6 +345,8 @@ function App() {
           onClose={closeAllPopups}
           onAddPlace={handleAddPlaceSubmit}
           isLoading={isLoading}
+          onCloseEsc={closePopupByEsc}
+          onCloseOverlay={closePopupByClickOverlay}
         />
 
         <ConfirmDeleteCardPopup
@@ -199,6 +355,8 @@ function App() {
           onCardDelete={handleCardDelete}
           cardId={deletedCard}
           isLoading={isLoading}
+          onCloseEsc={closePopupByEsc}
+          onCloseOverlay={closePopupByClickOverlay}
         />
 
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
@@ -208,14 +366,3 @@ function App() {
 }
 
 export default App;
-
-/*   
-Не хватает закрытия модальных окон по Esc и оверлей. Лучший способ реализации это описать еще один компонент Popup, 
-который будет возвращать обертку div className='.popup ...' В этот компонент передавать children isOpen и функцию закрытия onClose. 
-С помощью хука useEffect обхявить обработчик закрытия по Esc и описать проверку, что Если стейт isOpen в истине, 
-тогда вешать слушатель на document. Из хука, вне проверки нужно будет вернуть колбэком удаление слушателя 
-return () => {document.remove...}. 
-В массив зависимостей записать также isOpen, чтобы реакт понимал когда нужно вешать и когда удалять обработчик. 
-Также в этом компоненте можно описать функцию клика по overlay. Проверку осуществить через event.target и event.currentTarget. 
-Повесить этот обработчик на сам div на событие onClick. Компонент использовать в PopupWithForm и ImagePopup вместо div
-*/

@@ -41,7 +41,6 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
           onClick={handleDeleteClick}
         />
       )}
-      {/* <button className="element__delete" type="button" /> */}
       <div className="element__line-container">
         <h2 className="element__title">{card.name}</h2>
         <div className="element__like-container">

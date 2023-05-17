@@ -1,0 +1,29 @@
+.header__auth {
+  display: flex;
+  flex-direction: row;
+  margin: 0 0 41px 0;
+  align-self: flex-end;
+  justify-self: right;
+  grid-area: authbox;
+}
+
+@media screen and (max-width: 880px) {
+  .header__auth {
+    margin-right: 27px;
+  }
+}
+
+@media screen and (max-width: 570px) {
+  .header__auth {
+    margin-bottom: 30.6px;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    margin-bottom: 28px;
+    border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+    display: none;
+  }
+}

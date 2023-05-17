@@ -1,0 +1,31 @@
+.header__signin {
+  font-family: "Inter", Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  color: #fff;
+  margin: 0;
+  text-decoration: none;
+  transition: opacity 0.5s;
+}
+
+.header__signin:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+/* @media screen and (max-width: 570px) {
+  .header__signin {
+    font-size: 14px;
+    line-height: 17px;
+  }
+} */
+
+@media screen and (max-width: 570px) {
+  .header__signin {
+    color: #a9a9a9;
+    margin-top: 18px;
+    padding-bottom: 40px;
+  }
+}

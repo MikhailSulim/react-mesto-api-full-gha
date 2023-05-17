@@ -2,7 +2,14 @@ import PopupWithForm from "./PopupWithForm";
 import { useRef, useEffect } from "react";
 import useFormValidate from "../hooks/useFormValidate";
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
+function EditAvatarPopup({
+  isOpen,
+  onClose,
+  onUpdateAvatar,
+  isLoading,
+  onCloseEsc,
+  onCloseOverlay,
+}) {
   const avatarRef = useRef();
 
   const { values, errors, onChange, resetValidation, isFormValid } =
@@ -30,6 +37,8 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
       buttonText={isLoading ? "Сохранение..." : "Сохранить"}
       onSubmit={handleSubmit}
       isFormValid={isFormValid}
+      onCloseEsc={onCloseEsc}
+      onCloseOverlay={onCloseOverlay}
     >
       <input
         type="url"

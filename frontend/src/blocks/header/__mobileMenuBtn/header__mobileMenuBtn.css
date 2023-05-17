@@ -1,0 +1,24 @@
+.header__mobileMenuBtn {
+  background-image: url("../../../images/btnOpen.svg");
+  background-color: transparent;
+  border: none;
+  width: 24px;
+  height: 18px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0 0 41px 0;
+  display: none;
+  cursor: pointer;
+  grid-area: btn;
+}
+
+@media screen and (max-width: 570px) {
+  .header__mobileMenuBtn {
+    display: block;
+    margin-right: 27px;
+    margin-bottom: 30.6px;
+    justify-self: right;
+    align-self: center;
+  }
+}

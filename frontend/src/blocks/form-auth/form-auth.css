@@ -1,0 +1,15 @@
+.form-auth {
+  display: flex;
+  flex-direction: column;
+  max-width: 358px;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  min-height: 75vh;
+}
+
+@media screen and (max-width: 570px) {
+  .form-auth {
+    max-width: 260px;
+  }
+}
