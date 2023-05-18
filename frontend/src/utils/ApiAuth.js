@@ -1,4 +1,5 @@
-const BASE_URL = "https://auth.nomoreparties.co";
+// const BASE_URL = "https://auth.nomoreparties.co";
+const BASE_URL = "https://api.mesto2023.mihailsulim.nomoredomains.monster";
 
 function checkResponse(res) {
   // функция проверки ответа с сервера

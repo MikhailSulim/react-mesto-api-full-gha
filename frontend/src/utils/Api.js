@@ -94,9 +94,10 @@ class Api {
 }
 
 const api = new Api({
-  serverUrl: "https://mesto.nomoreparties.co/v1/cohort-59", // класс API
+  // serverUrl: "https://mesto.nomoreparties.co/v1/cohort-59", // класс API
+  serverUrl: "https://api.mesto2023.mihailsulim.nomoredomains.monster",
   headers: {
-    authorization: "015f9389-f767-4004-b14e-b18f050be44c",
+    // authorization: "015f9389-f767-4004-b14e-b18f050be44c",
     "Content-Type": "application/json",
   },
 });
