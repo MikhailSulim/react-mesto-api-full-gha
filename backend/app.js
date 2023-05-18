@@ -11,6 +11,8 @@ const { errors } = require('celebrate'); // мидлвэр ошибки
 // безопасность
 const helmet = require('helmet');
 
+const cors = require('./middlewares/cors');
+
 // логеры
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -34,6 +36,8 @@ app.use(cookieParser()); // подключаем парсер кук как ми
 mongoose.connect(DB_URL, {
   // useNewUrlParser: true,
 }); // с новых версий не обязательно добавлять опции
+
+app.use(cors);
 
 // мидлвэры безопасности
 app.use(helmet()); // для автоматической проставки заголовков безопасности
