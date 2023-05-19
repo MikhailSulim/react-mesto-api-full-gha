@@ -1,7 +1,8 @@
 class Api {
-  constructor({ serverUrl, headers }) {
+  constructor({ serverUrl, headers, credentials }) {
     this._serverUrl = serverUrl;
     this._headers = headers;
+    this._credentials = credentials;
   }
 
   _checkResponse(res) {
@@ -23,6 +24,7 @@ class Api {
     return this._request(`${this._serverUrl}/cards`, {
       method: "GET",
       headers: this._headers,
+      credentials: this._credentials,
     });
   }
 
@@ -31,6 +33,7 @@ class Api {
     return this._request(`${this._serverUrl}/users/me`, {
       method: "GET",
       headers: this._headers,
+      credentials: this._credentials,
     });
   }
 
@@ -45,6 +48,7 @@ class Api {
     return this._request(`${this._serverUrl}/cards`, {
       method: "POST",
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify({
         name: place.name,
         link: place.link,
@@ -57,6 +61,7 @@ class Api {
     return this._request(`${this._serverUrl}/users/me`, {
       method: "PATCH",
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify({
         name: userData.name,
         about: userData.about,
@@ -69,6 +74,7 @@ class Api {
     return this._request(`${this._serverUrl}/users/me/avatar`, {
       method: "PATCH",
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify({
         avatar: newAvatar.avatar,
       }),
@@ -80,6 +86,7 @@ class Api {
     return this._request(`${this._serverUrl}/cards/${cardId}/likes`, {
       method: `${!isLiked ? "DELETE" : "PUT"}`,
       headers: this._headers,
+      credentials: this._credentials,
     });
   }
 
@@ -89,6 +96,7 @@ class Api {
     return this._request(`${this._serverUrl}/cards/${cardId}`, {
       method: "DELETE",
       headers: this._headers,
+      credentials: this._credentials,
     });
   }
 }
@@ -100,6 +108,7 @@ const api = new Api({
     // authorization: "015f9389-f767-4004-b14e-b18f050be44c",
     "Content-Type": "application/json",
   },
+  credentials: 'include', // куки посылаются вместе с запросом
 });
 
 export default api;

@@ -1,5 +1,10 @@
 // const BASE_URL = "https://auth.nomoreparties.co";
-const BASE_URL = "https://api.mesto2023.mihailsulim.nomoredomains.monster";
+const BASE_URL = 'https://api.mesto2023.mihailsulim.nomoredomains.monster';
+const headers = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+};
+const credentials = 'include';
 
 function checkResponse(res) {
   // функция проверки ответа с сервера
@@ -8,12 +13,11 @@ function checkResponse(res) {
 
 async function makeRequest(url, method, body, token) {
   // обобщённая функция запроса с сервера
-  const headers = { "Content-Type": "application/json" };
   if (token !== undefined) {
-    headers["Authorization"] = `Bearer ${token}`;
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const options = { method, headers };
+  const options = { method, credentials, headers };
   if (body !== undefined) {
     options.body = JSON.stringify(body);
   }
@@ -24,15 +28,15 @@ async function makeRequest(url, method, body, token) {
 
 export function register(email, password) {
   // функция отправки данных для регистрации на сервере
-  return makeRequest("/signup", "POST", { email, password }, undefined);
+  return makeRequest('/signup', 'POST', { email, password }, undefined);
 }
 
 export function authorize(email, password) {
   // функция отправки данных для авторизации на сервере
-  return makeRequest("/signin", "POST", { email, password }, undefined);
+  return makeRequest('/signin', 'POST', { email, password }, undefined);
 }
 
 export function getTokenData(token) {
   // функция отправки данных для подтверждения токена
-  return makeRequest("/users/me", "GET", undefined, token);
+  return makeRequest('/users/me', 'GET', undefined, token);
 }
