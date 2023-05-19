@@ -223,6 +223,7 @@ function App() {
           const [initialCards, userData] = res;
           setCurrentUser(userData);
           setCards(initialCards);
+          navigate('/', {replace: true}); // чтобы переходил после авторизации
         })
         .catch((error) => console.error("error", error));
     }
