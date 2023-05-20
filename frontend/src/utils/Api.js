@@ -56,18 +56,30 @@ class Api {
     });
   }
 
-  setUserInfo(userData) {
+  setUserInfo({name, about}) {
     // функция замены данных о пользователе на сервере
     return this._request(`${this._serverUrl}/users/me`, {
       method: "PATCH",
       headers: this._headers,
       credentials: this._credentials,
       body: JSON.stringify({
-        name: userData.name,
-        about: userData.about,
+        name,
+        about,
       }),
     });
   }
+  // setUserInfo(userData) {
+  //   // функция замены данных о пользователе на сервере
+  //   return this._request(`${this._serverUrl}/users/me`, {
+  //     method: "PATCH",
+  //     headers: this._headers,
+  //     credentials: this._credentials,
+  //     body: JSON.stringify({
+  //       name: userData.name,
+  //       about: userData.about,
+  //     }),
+  //   });
+  // }
 
   setUserAvatar(newAvatar) {
     // функция замены данных об аватаре пользователя

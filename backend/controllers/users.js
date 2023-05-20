@@ -86,7 +86,7 @@ const updateProfile = (req, res, next, updData) => {
       if (!user) {
         throw new NotFoundError('Пользователь с данным id не найден');
       }
-      res.send({ data: user });
+      res.send(user);
     })
     .catch((err) => {
       if (err instanceof ValidationError) {

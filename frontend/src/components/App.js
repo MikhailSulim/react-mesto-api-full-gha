@@ -113,10 +113,10 @@ function App() {
     setIsConfirmDeleteCardPopupOpen(!isConfirmDeleteCardPopupOpen);
   }
 
-  function handleUpdateUser(newUserInfo) {
+  function handleUpdateUser({name, about}) {
     setIsLoading(true);
     api
-      .setUserInfo(newUserInfo)
+      .setUserInfo({name, about})
       .then((newUserData) => {
         setCurrentUser(newUserData);
         closeAllPopups();
@@ -129,6 +129,22 @@ function App() {
         }, 500);
       });
   }
+  // function handleUpdateUser(newUserInfo) {
+  //   setIsLoading(true);
+  //   api
+  //     .setUserInfo(newUserInfo)
+  //     .then((newUserData) => {
+  //       setCurrentUser(newUserData);
+  //       closeAllPopups();
+  //     })
+  //     .catch((error) => console.error('error', error))
+  //     .finally(() => {
+  //       setTimeout(() => {
+  //         // чтобы не было видно процесса обратной замены надписи
+  //         setIsLoading(false);
+  //       }, 500);
+  //     });
+  // }
 
   function handleUpdateAvatar(newAvatar) {
     setIsLoading(true);
