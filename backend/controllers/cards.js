@@ -13,7 +13,9 @@ const getCards = (req, res, next) => {
   // функция получения данных всех карточек
   Card.find({})
     .populate(['owner', 'likes']) // чтобы получить всю информацию об авторе
-    .then((cards) => res.send({ data: cards }))
+    // .then((cards) => res.send({ data: cards }))
+    // .then((cards) => res.send({ data: cards }))
+    .then((cards) => res.send(cards))
     .catch(next);
 };
 

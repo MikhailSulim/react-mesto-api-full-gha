@@ -40,3 +40,8 @@ export function getTokenData(token) {
   // функция отправки данных для подтверждения токена
   return makeRequest('/users/me', 'GET', undefined, token);
 }
+
+export function getContent() {
+  // функция отправки данных для подтверждения токена
+  return makeRequest('/users/me', 'GET', undefined, undefined);
+}

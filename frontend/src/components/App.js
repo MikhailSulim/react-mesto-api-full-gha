@@ -1,23 +1,24 @@
-import React, { useState } from "react";
-import Header from "./Header";
-import Register from "./Register";
-import Login from "./Login";
-import Main from "./Main";
-import Footer from "./Footer";
-import EditProfilePopup from "./EditProfilePopup";
-import EditAvatarPopup from "./EditAvatarPopup";
-import AddPlacePopup from "./AddPlacePopup";
-import InfoTooltip from "./InfoTooltip";
-import ConfirmDeleteCardPopup from "./ConfirmDeleteCardPopup";
-import ImagePopup from "./ImagePopup";
-import api from "../utils/Api.js";
-import { register, authorize, getTokenData } from "../utils/ApiAuth";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
-import ProtectedRouteElement from "./ProtectedRoute";
+import React, { useState } from 'react';
+import Header from './Header';
+import Register from './Register';
+import Login from './Login';
+import Main from './Main';
+import Footer from './Footer';
+import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
+import InfoTooltip from './InfoTooltip';
+import ConfirmDeleteCardPopup from './ConfirmDeleteCardPopup';
+import ImagePopup from './ImagePopup';
+import api from '../utils/Api.js';
+import * as ApiAuth from '../utils/ApiAuth.js';
+import { register, authorize, getTokenData } from '../utils/ApiAuth';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import ProtectedRouteElement from './ProtectedRoute';
 
 function App() {
-  const ERR_MESSAGE = "Что-то пошло не так! Попробуйте ещё раз.";
+  const ERR_MESSAGE = 'Что-то пошло не так! Попробуйте ещё раз.';
   // переменные состояния, отвечающие за видимость попапов
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -25,7 +26,7 @@ function App() {
   const [isConfirmDeleteCardPopupOpen, setIsConfirmDeleteCardPopupOpen] =
     useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
-  const [textMessageInfoTooltip, setTextMessageInfoTooltip] = useState("");
+  const [textMessageInfoTooltip, setTextMessageInfoTooltip] = useState('');
 
   // переменные состояния, отвечающие за карточки
   const [selectedCard, setSelectedCard] = useState({});
@@ -87,7 +88,7 @@ function App() {
           state.map((c) => (c._id === card._id ? newCard : c))
         );
       })
-      .catch((error) => console.error("error", error));
+      .catch((error) => console.error('error', error));
   }
 
   function handleCardDelete(cardId) {
@@ -98,7 +99,7 @@ function App() {
         setCards((cards) => cards.filter((card) => card._id !== cardId));
         closeAllPopups();
       })
-      .catch((error) => console.error("error", error))
+      .catch((error) => console.error('error', error))
       .finally(() => {
         setTimeout(() => {
           // чтобы не было видно процесса обратной замены надписи
@@ -120,7 +121,7 @@ function App() {
         setCurrentUser(newUserData);
         closeAllPopups();
       })
-      .catch((error) => console.error("error", error))
+      .catch((error) => console.error('error', error))
       .finally(() => {
         setTimeout(() => {
           // чтобы не было видно процесса обратной замены надписи
@@ -137,7 +138,7 @@ function App() {
         setCurrentUser(link);
         closeAllPopups();
       })
-      .catch((error) => console.error("error", error))
+      .catch((error) => console.error('error', error))
       .finally(() => {
         setTimeout(() => {
           // чтобы не было видно процесса обратной замены надписи
@@ -154,7 +155,7 @@ function App() {
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
-      .catch((error) => console.error("error", error))
+      .catch((error) => console.error('error', error))
       .finally(() => {
         setTimeout(() => {
           // чтобы не было видно процесса обратной замены надписи
@@ -169,10 +170,11 @@ function App() {
     // функция авторизации
     authorize(email, password)
       .then((res) => {
-        localStorage.setItem("jwt", res.token);
+        // localStorage.setItem("jwt", res.token);
+        localStorage.setItem('isAuthorized', 'true');
         setIsLoggedIn(true);
         setUserLogin(email);
-        navigate("/", { replace: true });
+        navigate('/', { replace: true });
       })
       .catch((err) => {
         console.error(err);
@@ -186,9 +188,9 @@ function App() {
     register(email, password)
       .then((res) => {
         setIsValidAuth(true);
-        setTextMessageInfoTooltip("Вы успешно зарегистрировались!");
+        setTextMessageInfoTooltip('Вы успешно зарегистрировались!');
         setIsInfoTooltipOpen(!isInfoTooltipOpen);
-        navigate("/signin", { replace: true });
+        navigate('/signin', { replace: true });
       })
       .catch(() => {
         setIsValidAuth(false);
@@ -200,43 +202,88 @@ function App() {
   function cbLogOut() {
     setIsLoggedIn(false);
     setUserLogin(null);
-    localStorage.removeItem("jwt");
+    // localStorage.removeItem("jwt");
+    localStorage.removeItem('isAuthorized');
   }
 
-  React.useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-    getTokenData(jwt)
-      .then((res) => {
-        setUserLogin(res.data.email);
-        setIsLoggedIn(true);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
+  // старое нерабочее с моим api
+  // React.useEffect(() => {
+  //   const jwt = localStorage.getItem("jwt");
+  //   getTokenData(jwt)
+  //     .then((res) => {
+  //       setUserLogin(res.data.email);
+  //       console.log(res.data);
+  //       setIsLoggedIn(true);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // }, []);
+
+  // React.useEffect(() => {
+  //   if (isLoggedIn) {
+  //     api
+  //       .getAllData()
+  //       .then((res) => {
+  //         const [initialCards, userData] = res;
+  //         setCurrentUser(userData);
+  //         setCards(initialCards);
+  //         navigate('/', {replace: true}); // чтобы переходил после авторизации
+  //       })
+  //       .catch((error) => console.error("error", error));
+  //   }
+  // }, [isLoggedIn, navigate]);
+
+  ///////////////////
+  const checkToken = React.useCallback(() => {
+    // если пользователь авторизован,
+    // эта функция проверит, есть ли данные в req.user._id на сервере
+    const isAuthorized = localStorage.getItem('isAuthorized');
+    if (isAuthorized) {
+      // проверим, есть ли данные в req.user._id
+      ApiAuth.getContent()
+        .then((userData) => {
+          if (userData.email) {
+            // авторизуем пользователя
+            setIsLoggedIn(true);
+            setUserLogin(userData.email);
+            navigate('/', { replace: true });
+          }
+        })
+        .catch((err) => {
+          console.log(err); // выведем ошибку в консоль
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } else {
+      setIsLoading(false);
+    }
+  }, [navigate]);
 
   React.useEffect(() => {
-    if (isLoggedIn) {
+    checkToken();
+    isLoggedIn &&
       api
         .getAllData()
         .then((res) => {
           const [initialCards, userData] = res;
           setCurrentUser(userData);
           setCards(initialCards);
-          navigate('/', {replace: true}); // чтобы переходил после авторизации
         })
-        .catch((error) => console.error("error", error));
-    }
-  }, [isLoggedIn]);
+        .catch((error) => console.error('error', error));
+  }, [checkToken, isLoggedIn]);
+
+  ///////////////////////////////////
 
   function closePopupByEsc(event) {
-    if (event.key === "Escape") {
+    if (event.key === 'Escape') {
       closeAllPopups();
     }
   }
 
   function closePopupByClickOverlay(event) {
-    if (event.target.classList.contains("popup_is-opened")) {
+    if (event.target.classList.contains('popup_is-opened')) {
       closeAllPopups();
     }
   }

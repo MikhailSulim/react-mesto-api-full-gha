@@ -17,7 +17,8 @@ exports.getUsers = (req, res, next) => {
   // функция получения данных всех пользователей
   User.find({})
     .then((users) => {
-      res.send({ data: users });
+      // res.send({ data: users });
+      res.send(users);
     })
     .catch(next);
 };
@@ -32,7 +33,8 @@ exports.getUser = (req, res, next) => {
         throw new NotFoundError('Пользователь с таким id не найден');
       }
 
-      res.send({ data: user });
+      // res.send({ data: user });
+      res.send(user);
     })
     .catch((err) => {
       if (err instanceof CastError) {
