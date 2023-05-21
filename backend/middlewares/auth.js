@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { JWT_SECRET } = require('../utils/config');
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 // импорт кастомного класса ошибки
 const UnauthorizedError = require('../errors/UnauthorizedError');
@@ -18,7 +18,7 @@ module.exports = (req, res, next) => {
   // верифицируем токен
   try {
     // пытаемся это сделать
-    payload = jwt.verify(token, JWT_SECRET);
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'another-secret-key');
   } catch (err) {
     // если не получилось
     return next(new UnauthorizedError('Необходима авторизация'));

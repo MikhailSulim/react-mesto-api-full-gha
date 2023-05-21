@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const { JWT_SECRET } = require('../utils/config');
+// const { JWT_SECRET } = require('../utils/config');
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 // импорт кастомных классов ошибок
 const BadRequestError = require('../errors/BadRequestError');
@@ -120,7 +121,7 @@ exports.login = (req, res, next) => {
       // создадим токен
       const token = jwt.sign(
         { _id: user._id }, // пейлоуд токена
-        JWT_SECRET, // секретный ключ подписи
+        NODE_ENV === 'production' ? JWT_SECRET : 'another-secret-key', // секретный ключ подписи
         { expiresIn: '7d' }, // токен будет просрочен через 7 дней
       );
       res

@@ -285,7 +285,7 @@ function App() {
         .then((res) => {
           const [initialCards, userData] = res;
           setCurrentUser(userData);
-          setCards(initialCards);
+          setCards(initialCards.reverse());
         })
         .catch((error) => console.error('error', error));
   }, [checkToken, isLoggedIn]);
