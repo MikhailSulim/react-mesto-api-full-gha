@@ -36,6 +36,11 @@ export function authorize(email, password) {
   return makeRequest('/signin', 'POST', { email, password }, undefined);
 }
 
+export function signout() {
+  // функция отправки данных для выхода из системы
+  return makeRequest('/signout', 'GET', undefined, undefined);
+}
+
 export function getTokenData(token) {
   // функция отправки данных для подтверждения токена
   return makeRequest('/users/me', 'GET', undefined, token);

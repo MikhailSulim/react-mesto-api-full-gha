@@ -50,15 +50,7 @@ app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
 
-// TODO внести улучшения после ревью
 /*
 Нет необходимости делать populate для полей owner и likes,
 чтобы не загружать запрос лишними запросами и данными
-
-Так как используется хранение токена в cookies,
-то можно будет добавить роут signout, который очищал бы куки
-Пример:
-app.get('/signout', (req, res) => {
-  res.clearCookie('jwt').send({ message: 'Выход' });
-});
 */

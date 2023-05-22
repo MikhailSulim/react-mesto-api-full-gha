@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-// const { JWT_SECRET } = require('../utils/config');
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 // импорт кастомных классов ошибок
@@ -18,7 +17,6 @@ exports.getUsers = (req, res, next) => {
   // функция получения данных всех пользователей
   User.find({})
     .then((users) => {
-      // res.send({ data: users });
       res.send(users);
     })
     .catch(next);
@@ -33,8 +31,6 @@ exports.getUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь с таким id не найден');
       }
-
-      // res.send({ data: user });
       res.send(user);
     })
     .catch((err) => {
@@ -49,11 +45,20 @@ exports.getUser = (req, res, next) => {
 exports.createUser = (req, res, next) => {
   // функция создания нового пользователя
   const {
-    name, about, avatar, email, password,
+    name,
+    about,
+    avatar,
+    email,
+    password,
   } = req.body;
+
   // хешируем пароль
   bcrypt.hash(password, 10).then((hash) => User.create({
-    name, about, avatar, email, password: hash,
+    name,
+    about,
+    avatar,
+    email,
+    password: hash,
   }) // запись в бд
     .then((user) => {
       res.status(CODE_CREATED_201).send(user);
@@ -114,6 +119,7 @@ exports.updateAvatar = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+  // функция авторизации
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
@@ -137,6 +143,11 @@ exports.login = (req, res, next) => {
   /* Метод bcrypt.compare работает асинхронно,
   поэтому результат нужно вернуть и обработать в следующем then.
   Если хеши совпали, в следующий then придёт true, иначе — false: */
+};
+
+exports.logout = (req, res) => {
+  // функция выхода из системы авторизации
+  res.clearCookie('jwt').send({ message: 'Вы вышли из системы' });
 };
 
 exports.getCurrentUser = (req, res, next) => {

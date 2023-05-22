@@ -11,8 +11,7 @@ import InfoTooltip from './InfoTooltip';
 import ConfirmDeleteCardPopup from './ConfirmDeleteCardPopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/Api.js';
-import * as ApiAuth from '../utils/ApiAuth.js';
-import { register, authorize, getTokenData } from '../utils/ApiAuth';
+import { register, authorize, signout, getContent } from '../utils/ApiAuth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import ProtectedRouteElement from './ProtectedRoute';
@@ -216,10 +215,14 @@ function App() {
   }
 
   function cbLogOut() {
-    setIsLoggedIn(false);
-    setUserLogin(null);
-    // localStorage.removeItem("jwt");
-    localStorage.removeItem('isAuthorized');
+    signout().then((res) => {
+      setIsLoggedIn(false);
+      setUserLogin(null);
+      localStorage.removeItem('isAuthorized');
+      // navigate('/signin', { replace: true });
+    }).catch((err) => {
+      console.error(err);
+    });    
   }
 
   // старое нерабочее с моим api
@@ -257,7 +260,7 @@ function App() {
     const isAuthorized = localStorage.getItem('isAuthorized');
     if (isAuthorized) {
       // проверим, есть ли данные в req.user._id
-      ApiAuth.getContent()
+      getContent()
         .then((userData) => {
           if (userData.email) {
             // авторизуем пользователя

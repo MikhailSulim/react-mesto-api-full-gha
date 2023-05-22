@@ -8,7 +8,7 @@ const cards = require('./cards');
 const auth = require('../middlewares/auth');
 
 // импорт контроллеров
-const { login, createUser } = require('../controllers/users');
+const { login, createUser, logout } = require('../controllers/users');
 
 // импорт валидаторов
 const {
@@ -26,6 +26,7 @@ router.post('/signup', userSignupValidator, createUser);
 // роуты с авторизацией
 router.use('/users', auth, users);
 router.use('/cards', auth, cards);
+router.get('/signout', auth, logout);
 
 // роут для любых других/несуществующих путей
 router.use('*', auth, (req, res, next) => {
