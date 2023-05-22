@@ -19,6 +19,13 @@ const {
 // импорт кастомной ошибки
 const NotFoundError = require('../errors/NotFoundError');
 
+// краш тест сервера
+router.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 // роуты без авторизации
 router.post('/signin', userSigninValidator, login);
 router.post('/signup', userSignupValidator, createUser);
