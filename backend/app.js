@@ -1,34 +1,25 @@
-require('dotenv').config(); // для работы с переменными окружения в process.env
+// модуль для работы с переменными окружения в process.env
+require('dotenv').config();
 
+// npm-пакеты
 const express = require('express');
-const cookieParser = require('cookie-parser'); // для парсинга кук
-
-const app = express();
 const mongoose = require('mongoose'); // подключение базы данных
 
+// мидлвэры
+const cookieParser = require('cookie-parser'); // для парсинга кук
+const helmet = require('helmet'); // безопасность
 const { errors } = require('celebrate'); // мидлвэр ошибки
+const { requestLogger, errorLogger } = require('./middlewares/logger'); // логеры ошибок и запросов
+const cors = require('./middlewares/cors'); // кросс-доменный доступ к api
+const limiter = require('./middlewares/limiter'); // для ограничения количеества запросов
 
-// безопасность
-const helmet = require('helmet');
+const app = express(); // создаёт приложение методом express
 
-const cors = require('./middlewares/cors');
-
-// логеры
-const { requestLogger, errorLogger } = require('./middlewares/logger');
-
-const limiter = require('./middlewares/limiter');
-
-const signinRouter = require('./routes/signin');
-const signupRouter = require('./routes/signup');
-const userRouter = require('./routes/users'); // подключение роутов пользователей
-const cardRouter = require('./routes/cards'); // подключение роутов карточек
-
-const auth = require('./middlewares/auth'); // подключение мидлвэр авторизации
+const routes = require('./routes/index'); // все роутеры
 
 const { PORT, DB_URL } = require('./utils/config');
 
 const errorsHandler = require('./middlewares/errorsHandler'); // подключение для централизованной обработки ошибок
-const NotFoundError = require('./errors/NotFoundError'); // кастомный класс ошибки
 
 app.use(express.json()); // для взаимодействия с req.body, аналог body-parser
 app.use(cookieParser()); // подключаем парсер кук как мидлвэр, для работы req.cookies
@@ -45,16 +36,7 @@ app.use(limiter); // для предотвращения ddos атак, огра
 
 app.use(requestLogger); // подключаем логгер запросов
 
-// роуты
-app.use('/', signinRouter);
-app.use('/', signupRouter);
-
-app.use('/users', auth, userRouter);
-app.use('/cards', auth, cardRouter);
-
-app.use('*', auth, (req, res, next) => {
-  next(new NotFoundError('Запрашиваемый URL не существует'));
-});
+app.use(routes); // все роуты
 
 app.use(errorLogger); // подключаем логгер ошибок
 
@@ -70,14 +52,6 @@ app.listen(PORT, () => {
 
 // TODO внести улучшения после ревью
 /*
-Работа выполнена хорошо, реализована Joi‌ ‌валидация‌ и ‌централизованная‌ ‌обработка‌ ‌ошибок,
-ошибки вынесены в отдельные классы. Реализованы регистрация, логин и авторизация.
-Отлично, что подключены helmet и limiter!
-Можно лучше:
-Роуты можно вынести в отдельный файл index.js в папку routes,
-так чтобы вся логика маршрутизации была вынесена из файла app.js:
-https://disk.yandex.ru/i/7QfVswBHJRLY8A. Затем роуты можно будет подключить в файле app.js одной строкой: app.use(routes);
-
 Нет необходимости делать populate для полей owner и likes,
 чтобы не загружать запрос лишними запросами и данными
 

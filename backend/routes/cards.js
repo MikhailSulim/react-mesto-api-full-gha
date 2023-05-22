@@ -1,13 +1,14 @@
-const express = require('express');
+// роутер для карточек
+const router = require('express').Router();
 
 const {
+  // импорт валидаторов celebrate
   cardDataValidator,
   cardIdValidator,
 } = require('../middlewares/validators/cardsValidator');
 
-const cardRouter = express.Router();
-
 const {
+  // импорт контроллеров
   getCards,
   createCard,
   deleteCard,
@@ -15,14 +16,15 @@ const {
   dislikeCard,
 } = require('../controllers/cards');
 
-cardRouter.get('/', getCards); // возвращает все карточки
+// роутеры
+router.get('/', getCards); // возвращает все карточки
 
-cardRouter.post('/', cardDataValidator, createCard); // создаёт карточку
+router.post('/', cardDataValidator, createCard); // создаёт карточку
 
-cardRouter.delete('/:cardId', cardIdValidator, deleteCard); // удаляет карточку по идентификатору
+router.delete('/:cardId', cardIdValidator, deleteCard); // удаляет карточку по идентификатору
 
-cardRouter.put('/:cardId/likes', cardIdValidator, likeCard); // поставить лайк карточке
+router.put('/:cardId/likes', cardIdValidator, likeCard); // поставить лайк карточке
 
-cardRouter.delete('/:cardId/likes', cardIdValidator, dislikeCard); // убрать лайк с карточки
+router.delete('/:cardId/likes', cardIdValidator, dislikeCard); // убрать лайк с карточки
 
-module.exports = cardRouter;
+module.exports = router;

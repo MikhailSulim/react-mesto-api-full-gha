@@ -1,13 +1,13 @@
-const express = require('express');
+// роутер для пользователей
+const router = require('express').Router();
 
-const {
+const { // импорт валидаторов celebrate
   userIdValidator,
   userDataValidator,
   userAvatarValidator,
 } = require('../middlewares/validators/usersValidator');
 
-const userRouter = express.Router();
-const {
+const { // импорт контроллеров
   getUsers,
   getUser,
   updateUser,
@@ -15,14 +15,15 @@ const {
   getCurrentUser,
 } = require('../controllers/users');
 
-userRouter.get('/', getUsers); // возвращает всех пользователей
+// роутеры
+router.get('/', getUsers); // возвращает всех пользователей
 
-userRouter.get('/me', getCurrentUser); // возвращает данные текущего пользователя
+router.get('/me', getCurrentUser); // возвращает данные текущего пользователя
 
-userRouter.get('/:userId', userIdValidator, getUser); // возвращает пользователя по _id
+router.get('/:userId', userIdValidator, getUser); // возвращает пользователя по _id
 
-userRouter.patch('/me', userDataValidator, updateUser); // обновляет профиль
+router.patch('/me', userDataValidator, updateUser); // обновляет профиль
 
-userRouter.patch('/me/avatar', userAvatarValidator, updateAvatar); // обновляет аватар
+router.patch('/me/avatar', userAvatarValidator, updateAvatar); // обновляет аватар
 
-module.exports = userRouter;
+module.exports = router;
